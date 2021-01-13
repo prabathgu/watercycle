@@ -33,7 +33,8 @@ var content;
 var bubble;
 var shape;
 
-var diceRollReady = true;
+var titleScreenVisible = true;
+var diceRollReady = false;
 const diceMapping = [1,2,4,5,3,0];
 
 const startingLineWidth = 2;
@@ -44,6 +45,7 @@ function preload ()
 {
     //this.load.setBaseURL('http://labs.phaser.io');
     this.load.image('background', 'water_cycle2.png');
+    this.load.image('title', 'title2.png');
     this.load.image('droplet', 'droplet.png');
     this.load.spritesheet('dice', 'dice.png', { frameWidth: 64, frameHeight: 64 });
 }
@@ -73,9 +75,9 @@ function create ()
 
     this.createSpeechBubble(droplet.x, droplet.y - 150, 450, 100, 'Click here to roll the dice!');
     
-    diceRollReady = true;
+    this.title = this.add.image(0, 0, 'title').setOrigin(0);
 
-    //this.input.on('pointerdown', handleclick);
+    this.input.on('pointerdown', handleclick);
 }
 
 
@@ -189,6 +191,11 @@ function drawArc(next, count) {
 
 function handleclick(pointer, targets){
     console.log("handleclick",pointer);
+    if (titleScreenVisible) {
+        titleScreenVisible = false;
+        diceRollReady = true;
+        parent.title.destroy();
+    }
     /*
     for (const [key, loc] of Object.entries(locations)) {
         if (loc.startX < pointer.downX && loc.endX > pointer.downX
