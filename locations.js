@@ -23,8 +23,8 @@ const locations = {
                 text: 'You stay in the atmosphere!'
             },
             {
-                location: 'CLOUDS_OCEAN',
-                rolls: [3,4],
+                location: 'CLOUDS',
+                rolls: [3,4,6],
                 text: 'You condense into a cloud!'
             },
             {
@@ -32,55 +32,40 @@ const locations = {
                 rolls: [5],
                 text: 'You turn into dew droplets on the ground!'
             },
-            {
-                location: 'CLOUDS',
-                rolls: [6],
-                text: 'You condense into a cloud!'
-            },
-        ]
-    },
-    'CLOUDS_OCEAN': {
-        startX: 520, startY: 190, endX: 660, endY: 240,        
-        goto: [
-            {
-                location: 'OCEAN',
-                rolls: [1,2,3,4,5,6],
-                text: 'You rain down on to the ocean!'
-            }
         ]
     },
     'CLOUDS': {
         startX: 520, startY: 190, endX: 660, endY: 240,        
         goto: [
             {
-                location: 'CLOUDS',
-                rolls: [1],
-                text: 'You stay as a cloud!'
-            },
-            {
-                location: 'ATMOSPHERE',
-                rolls: [2],
-                text: 'You evaporate to the atmosphere!'
-            },
-            {
-                location: 'CLOUDS_OCEAN',
-                rolls: [3],
-                text: 'You condense into a cloud!'
-            },
-            {
-                location: 'GROUND',
-                rolls: [4],
-                text: 'You rain down on the ground!'
-            },
-            {
                 location: 'RIVERS',
-                rolls: [5],
+                rolls: [1],
                 text: 'You rain down on to rivers and lakes!'
             },
             {
+                location: 'OCEAN',
+                rolls: [2],
+                text: 'You rain down on to the ocean!'
+            },
+            {
+                location: 'ATMOSPHERE',
+                rolls: [3],
+                text: 'You evaporate to the atmosphere!'
+            },
+            {
+                location: 'CLOUDS',
+                rolls: [4],
+                text: 'You stay as a cloud!'
+            },
+            {
                 location: 'SNOW',
-                rolls: [6],
+                rolls: [5],
                 text: 'You freeze into snow!'
+            },
+            {
+                location: 'GROUND',
+                rolls: [6],
+                text: 'You rain down on the ground!'
             },
         ]
     },

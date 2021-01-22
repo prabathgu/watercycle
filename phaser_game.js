@@ -303,25 +303,21 @@ function transition(roll) {
             dice.setFrame(diceMapping[roll-1]);
             moveDroplet(next);
 
-            // Special case to consider CLOUDS_OCEAN and CLOUDS together for visit counting
-            var current_mod = (current == 'CLOUDS_OCEAN' ? 'CLOUDS' : current); 
-            var next_mod = (next == 'CLOUDS_OCEAN' ? 'CLOUDS' : next); 
-            
             // Increment the number of visits from current to next location
-            if (!locations[current_mod].visits) {
-                locations[current_mod].visits = {};
+            if (!locations[current].visits) {
+                locations[current].visits = {};
             }
-            if (!locations[current_mod].visits[next_mod]) {
-                locations[current_mod].visits[next_mod] = 0;
+            if (!locations[current].visits[next]) {
+                locations[current].visits[next] = 0;
             }
-            locations[current_mod].visits[next_mod] += 1;
-            console.log('Visit count: ', locations[current_mod].visits[next_mod]);
+            locations[current].visits[next] += 1;
+            console.log('Visit count: ', locations[current].visits[next]);
 
             // Draw an arc if it's a self visit, an arrow otherwise
-            if (current_mod == next_mod) {
-                drawArc(next, locations[current_mod].visits[next_mod]);
+            if (current == next) {
+                drawArc(next, locations[current].visits[next]);
             } else {
-                drawArrow(next, locations[current_mod].visits[next_mod]);
+                drawArrow(next, locations[current].visits[next]);
             }
 
             current = next;
