@@ -32,6 +32,8 @@ var parent;
 var content;
 var bubble;
 var shape;
+var turns;
+var numTurns = 0;
 
 var titleScreenVisible = true;
 var diceRollReady = false;
@@ -75,6 +77,8 @@ function create ()
 
     this.createSpeechBubble(droplet.x, droplet.y - 150, 450, 100, 'Click here to roll the dice!');
     
+    showTurns();
+
     this.title = this.add.image(0, 0, 'title').setOrigin(0);
 
     this.input.on('pointerdown', handleclick);
@@ -250,14 +254,7 @@ function createSpeechBubble (x, y, width, height, quote) {
 }
 
 
-function clickedBubble(pointer) {
-    console.log('clicked on bubble!');
-    if (!diceRollReady) {
-        console.log('Not rolling dice');
-        return;
-    }
-    diceRollReady = false;
-
+function rollDice() {
     destroyDialogs();
     createSpeechBubble(0, 0, 100, 100, "");
 
@@ -273,6 +270,20 @@ function clickedBubble(pointer) {
         console.log('Roll: ',roll);
         transition(roll);
     }, parent);
+
+    numTurns += 1;
+    showTurns();
+}
+
+
+function clickedBubble(pointer) {
+    console.log('clicked on bubble!');
+    if (!diceRollReady) {
+        console.log('Not rolling dice');
+        return;
+    }
+    diceRollReady = false;
+    rollDice();
 }
 
 
@@ -329,4 +340,14 @@ function destroyDialogs() {
         bubble.destroy();
         shape.destroy();
     }
+}
+
+
+function showTurns() {
+    if (turns) {
+        turns.destroy();
+    }
+    var str = 'Turns : ' + numTurns;
+    console.log(str);
+    turns = parent.add.text(parent.scale.width - 200, 20, str, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center' });
 }
