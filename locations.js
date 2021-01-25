@@ -5,12 +5,14 @@ const locations = {
             {
                 location: 'OCEAN',
                 rolls: [1,2,3],
-                text: 'You stay in the ocean!'
+                text: 'You stay in the ocean!',
+                image: 'ocean.jpg'
             },
             {
                 location: 'ATMOSPHERE',
                 rolls: [4,5,6],
-                text: 'You evaporate to the atmosphere!'
+                text: 'You evaporate to the atmosphere!',
+                image: 'evaporation.png'
             },
         ]
     },
@@ -20,17 +22,20 @@ const locations = {
             {
                 location: 'ATMOSPHERE',
                 rolls: [1,2],
-                text: 'You stay in the atmosphere!'
+                text: 'You stay in the atmosphere!',
+                image: 'atmosphere.jpg'
             },
             {
                 location: 'CLOUDS',
                 rolls: [3,4,6],
-                text: 'You condense into a cloud!'
+                text: 'You condense into a cloud!',
+                image: 'clouds.jpg'
             },
             {
                 location: 'GROUND',
                 rolls: [5],
-                text: 'You turn into dew droplets on the ground!'
+                text: 'You turn into dew droplets on the ground!',
+                image: 'dewdrop.png'
             },
         ]
     },
@@ -40,32 +45,38 @@ const locations = {
             {
                 location: 'RIVERS',
                 rolls: [1],
-                text: 'You rain down on to rivers and lakes!'
+                text: 'You rain down on to rivers and lakes!',
+                image: 'rain.jpg'
             },
             {
                 location: 'OCEAN',
                 rolls: [2],
-                text: 'You rain down on to the ocean!'
+                text: 'You rain down on to the ocean!',
+                image: 'rain.jpg'
             },
             {
                 location: 'ATMOSPHERE',
                 rolls: [3],
-                text: 'You evaporate to the atmosphere!'
+                text: 'You evaporate to the atmosphere!',
+                image: 'evaporation.png'
             },
             {
                 location: 'CLOUDS',
                 rolls: [4],
-                text: 'You stay as a cloud!'
+                text: 'You stay as a cloud!',
+                image: 'clouds.jpg'
             },
             {
                 location: 'SNOW',
                 rolls: [5],
-                text: 'You freeze into snow!'
+                text: 'You freeze into snow!',
+                image: 'snowflake.png'
             },
             {
                 location: 'GROUND',
                 rolls: [6],
-                text: 'You rain down on the ground!'
+                text: 'You rain down on the ground!',
+                image: 'rain.jpg'
             },
         ]
     },
@@ -75,17 +86,20 @@ const locations = {
             {
                 location: 'ATMOSPHERE',
                 rolls: [1,2,3],
-                text: 'You evaporate to the atmosphere!'
+                text: 'You evaporate to the atmosphere!',
+                image: 'evaporation.png'
             },
             {
                 location: 'PLANTS',
                 rolls: [4,5],
-                text: 'You are absorbed by the roots of a plant!'
+                text: 'You are absorbed by the roots of a plant!',
+                image: 'treeroots.png'
             },
             {
                 location: 'AQUIFER',
                 rolls: [6],
-                text: 'You percolate (drip) deeper into the ground!'
+                text: 'You percolate (drip) deeper into the ground!',
+                image: 'percolate.jpg'
             },
         ]
     },
@@ -95,27 +109,32 @@ const locations = {
             {
                 location: 'RIVERS',
                 rolls: [1],
-                text: 'You stay in the Rivers and Lakes!'
+                text: 'You stay in the Rivers and Lakes!',
+                image: 'rivers.jpg'
             },
             {
                 location: 'OCEAN',
                 rolls: [2,3],
-                text: 'You flow into the ocean!'
+                text: 'You flow into the ocean!',
+                image: 'water.jpg'
             },
             {
                 location: 'ATMOSPHERE',
                 rolls: [4],
-                text: 'You evaporate to the atmosphere!'
+                text: 'You evaporate to the atmosphere!',
+                image: 'evaporation.png'
             },
             {
                 location: 'GROUND',
                 rolls: [5],
-                text: 'You soak into the ground!'
+                text: 'You soak into the ground!',
+                image: 'soil.jpg'
             },
             {
                 location: 'AQUIFER',
                 rolls: [6],
-                text: 'You percolate (drip) deeper into the ground!'
+                text: 'You percolate (drip) deeper into the ground!',
+                image: 'percolate.jpg'
             },
         ]
     },
@@ -125,22 +144,26 @@ const locations = {
             {
                 location: 'AQUIFER',
                 rolls: [1,2,3],
-                text: 'You stay in the Aquifer!'
+                text: 'You stay in the Aquifer!',
+                image: 'aquifer.jpg'
             },
             {
                 location: 'OCEAN',
                 rolls: [4],
-                text: 'You flow into the ocean!'
+                text: 'You flow into the ocean!',
+                image: 'water.jpg'
             },
             {
                 location: 'GROUND',
                 rolls: [5],
-                text: 'You bubble up as a puddle on the ground!'
+                text: 'You bubble up as a puddle on the ground!',
+                image: 'water.jpg'
             },
             {
                 location: 'RIVERS',
                 rolls: [6],
-                text: 'You bubble up as a spring of water!'
+                text: 'You bubble up as a spring of water!',
+                image: 'water.jpg'
             },
         ]
     },
@@ -150,12 +173,14 @@ const locations = {
             {
                 location: 'PLANTS',
                 rolls: [1],
-                text: 'You stay in the Plants!'
+                text: 'You stay in the Plants!',
+                image: 'forest.jpg'
             },
             {
                 location: 'ATMOSPHERE',
                 rolls: [2,3,4,5,6],
-                text: 'You evaporate from the plant (transpiration)!'
+                text: 'You evaporate from the plant (transpiration)!',
+                image: 'transpiration.png'
             },
         ]
     },
@@ -165,22 +190,26 @@ const locations = {
             {
                 location: 'RIVERS',
                 rolls: [1,2],
-                text: 'You melt into runoff!'
+                text: 'You melt into runoff!',
+                image: 'snowforest.jpg'
             },
             {
                 location: 'GROUND',
                 rolls: [3,4],
-                text: 'You melt and soak into the ground!'
+                text: 'You melt and soak into the ground!',
+                image: 'soil.jpg'
             },
             {
                 location: 'ATMOSPHERE',
                 rolls: [5],
-                text: 'You sublimate into a gas!'
+                text: 'You sublimate into a gas!',
+                image: 'evaporation.png'
             },
             {
                 location: 'GLACIERS',
                 rolls: [6],
-                text: 'You are compacted into ice!'
+                text: 'You are compacted into ice!',
+                image: 'glaciers.jpg'
             },
         ]
     },
@@ -190,32 +219,38 @@ const locations = {
             {
                 location: 'GLACIERS',
                 rolls: [1],
-                text: 'You stay in the Glacier!'
+                text: 'You stay in the Glacier!',
+                image: 'glaciers.jpg'
             },
             {
                 location: 'OCEAN',
                 rolls: [2],
-                text: 'You melt and flow into the ocean!'
+                text: 'You melt and flow into the ocean!',
+                image: 'water.jpg'
             },
             {
                 location: 'ATMOSPHERE',
                 rolls: [3],
-                text: 'You sublimate into a gas!'
+                text: 'You sublimate into a gas!',
+                image: 'evaporation.png'
             },
             {
                 location: 'GROUND',
                 rolls: [4],
-                text: 'You melt and soak into the ground!'
+                text: 'You melt and soak into the ground!',
+                image: 'soil.jpg'
             },
             {
                 location: 'RIVERS',
                 rolls: [5],
-                text: 'You melt into runoff!'
+                text: 'You melt into runoff!',
+                image: 'snowforest.jpg'
             },
             {
                 location: 'AQUIFER',
                 rolls: [6],
-                text: 'You melt and percolate (drip) deep into the ground!'
+                text: 'You melt and percolate (drip) deep into the ground!',
+                image: 'percolate.jpg'
             },
         ]
     },

@@ -10,7 +10,7 @@ var config = {
         create: create,
         update: update,
         extend: {
-            createSpeechBubble: createSpeechBubble,
+            createBubble: createBubble,
             clickedBubble: clickedBubble
         }
     }
@@ -25,38 +25,55 @@ var travelling = false;
 var travelSteps = 0;
 var travelX = 0, travelY = 0;
 
+// Various sprites, images and drawing containers
 var droplet;
 var graphics;
-var dice;
 var parent;
 var content;
 var bubble;
 var shape;
+var bubbleImage;
+var dice;
+
 var turns;
 var numTurns = 0;
 
 var titleScreenVisible = true;
+
+// Dice position, settings and frame order
+const diceX = 1400 - 100, diceY = 100;
 var diceRollReady = false;
 const diceMapping = [1,2,4,5,3,0];
 
+// Line settings for drawing arrows
 const startingLineWidth = 2;
 const lineWidthIncrement = 2;
 const lineColor = 0x888888;
 
-function preload ()
-{
+const fixBubbleWidth = 700;
+const fixBubbleHeight = 200;
+
+function preload () {
+    parent = this;
+
     //this.load.setBaseURL('http://labs.phaser.io');
     this.load.image('background', 'water_cycle2.png');
     this.load.image('title', 'title2.png');
     this.load.image('droplet', 'droplet.png');
     this.load.spritesheet('dice', 'dice.png', { frameWidth: 64, frameHeight: 64 });
+    for (const location in locations) {
+        console.log(location);
+        locations[location].goto.forEach(function(destination) {
+            console.log(destination);
+            if (destination.image) {
+                parent.load.image(destination.image, destination.image);
+            };
+        });
+    };
 }
 
 
-function create ()
-{
-    parent = this;
-
+function create () {
     this.bg = this.add.image(0, 0, 'background').setOrigin(0);
 
     droplet = this.add.sprite(200, 200, 'droplet');
@@ -75,13 +92,20 @@ function create ()
 
     this.anims.create(animConfig);
 
-    this.createSpeechBubble(droplet.x, droplet.y - 150, 450, 100, 'Click here to roll the dice!');
+    this.createBubble(droplet.x, droplet.y - 150, 450, 100, 'Click here to roll the dice!');
     
     showTurns();
 
-    this.title = this.add.image(0, 0, 'title').setOrigin(0);
+    //this.title = this.add.image(0, 0, 'title').setOrigin(0);
 
     this.input.on('pointerdown', handleclick);
+
+
+    let { width, height } = this.sys.game.canvas;
+    console.log(width, height);
+    console.log(window.devicePixelRatio);
+    console.log(window);
+    console.log(window.innerWidth, window.innerHeight);
 }
 
 
@@ -198,7 +222,7 @@ function handleclick(pointer, targets){
     if (titleScreenVisible) {
         titleScreenVisible = false;
         diceRollReady = true;
-        parent.title.destroy();
+        //parent.title.destroy();
     }
     /*
     for (const [key, loc] of Object.entries(locations)) {
@@ -217,19 +241,12 @@ function handleclick(pointer, targets){
 }
 
 
-function createSpeechBubble (x, y, width, height, quote) {
-    var bubbleWidth = width;
-    var bubbleHeight = height;
-    var bubblePadding = 40;
-    var arrowHeight = bubbleHeight / 4;
-
-    x = parent.scale.width / 2 - width / 2;
-    y = parent.scale.height / 2 - height / 3;
-    bubble = parent.add.graphics({ x: x, y: y });
+function drawBubble(x, y, width, height) {
+    var bubble = parent.add.graphics({ x: x, y: y });
 
     //  Bubble shadow
     bubble.fillStyle(0x222222, 0.5);
-    bubble.fillRoundedRect(6, 6, bubbleWidth, bubbleHeight, 16);
+    bubble.fillRoundedRect(6, 6, width, height, 16);
 
     //  Bubble color
     bubble.fillStyle(0xffffff, 1);
@@ -238,14 +255,54 @@ function createSpeechBubble (x, y, width, height, quote) {
     bubble.lineStyle(4, 0x565656, 1);
 
     //  Bubble shape and outline
-    bubble.strokeRoundedRect(0, 0, bubbleWidth, bubbleHeight, 16);
-    bubble.fillRoundedRect(0, 0, bubbleWidth, bubbleHeight, 16);
+    bubble.strokeRoundedRect(0, 0, width, height, 16);
+    bubble.fillRoundedRect(0, 0, width, height, 16);
 
-    content = parent.add.text(0, 0, quote, { fontFamily: 'Arial', fontSize: 30, color: '#000000', align: 'center', wordWrap: { width: bubbleWidth - (bubblePadding * 2) } });
+    return bubble;
+}
+
+
+function createBubble (x, y, width, height, quote, image) {
+    const maxWidth = 640, maxHeight = 480;
+    const bubblePadding = 10;
+    var bubbleWidth = maxWidth + bubblePadding * 2;
+    var bubbleHeight = height;
+    var imageWidth = 0; //bubbleWidth - bubblePadding * 2;
+    var imageHeight = 0;
+    var aspectRatio = 1;
+
+    var dummyContent = parent.add.text(0, 0, quote, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center', wordWrap: { width: bubbleWidth - (bubblePadding * 2) } });
+    var dummyBound = dummyContent.getBounds();
+    dummyContent.destroy();
+    var textHeight = dummyBound.height + bubblePadding;
+
+    if (image) {
+        var tex = parent.textures.get(image);
+        console.log(tex.get(0).width, tex.get(0).height);
+        aspectRatio = tex.get(0).height / tex.get(0).width;
+        imageWidth = Math.min(maxWidth, tex.get(0).width);
+        imageHeight = imageWidth * aspectRatio;
+        bubbleHeight = imageHeight + bubblePadding * 2 + textHeight;
+    }
+
+    x = parent.scale.width / 2 - bubbleWidth / 2;
+    y = parent.scale.height / 2 - bubbleHeight / 2;
+
+    bubble = drawBubble(x, y, bubbleWidth, bubbleHeight)
+
+    content = parent.add.text(0, 0, quote, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center', wordWrap: { width: bubbleWidth - (bubblePadding * 2) } });
 
     var b = content.getBounds();
 
-    content.setPosition(bubble.x + (bubbleWidth / 2) - (b.width / 2), bubble.y + (bubbleHeight / 2) - (b.height / 2));
+    var contentY = y + (bubbleHeight / 2) - (b.height / 2);
+    if (image) {
+        contentY = y + bubbleHeight - textHeight;
+        bubbleImage = parent.add.image(x + bubbleWidth / 2 - imageWidth / 2, y + bubblePadding, image).setOrigin(0, 0);
+        console.log(bubbleImage.width, bubbleImage.height);
+        bubbleImage.setDisplaySize(imageWidth, imageHeight);
+    }
+    console.log('Text Bound Height', b.height);
+    content.setPosition(x + (bubbleWidth / 2) - (b.width / 2), contentY);
 
     // Adding a shape to track clicks
     shape = parent.add.rectangle(x, y, bubbleWidth, bubbleHeight).setOrigin(0,0);
@@ -256,9 +313,9 @@ function createSpeechBubble (x, y, width, height, quote) {
 
 function rollDice() {
     destroyDialogs();
-    createSpeechBubble(0, 0, 100, 100, "");
+    //createBubble(0, 0, 100, 100, "");
 
-    dice = parent.add.sprite(parent.scale.width / 2 , parent.scale.height / 2 + 15 , 'dice').play('diceAnimation');            
+    dice = parent.add.sprite(diceX, diceY, 'dice').play('diceAnimation');            
     //  Event handler for when the animation updates on our sprite
     dice.on(Phaser.Animations.Events.ANIMATION_UPDATE, function (anim, frame, sprite, frameKey) {
         dice.angle = dice.angle + 50;
@@ -298,8 +355,8 @@ function transition(roll) {
             console.log(destination.text);
 
             destroyDialogs();
-            createSpeechBubble(0, 0, 400, 100, destination.text);
-            dice = parent.add.sprite(parent.scale.width / 2 - 200, parent.scale.height / 2 + 15 , 'dice');
+            createBubble(0, 0, fixBubbleWidth, fixBubbleHeight, destination.text, destination.image);
+            dice = parent.add.sprite(diceX, diceY, 'dice');
             dice.setFrame(diceMapping[roll-1]);
             moveDroplet(next);
 
@@ -335,6 +392,9 @@ function destroyDialogs() {
         content.destroy();
         bubble.destroy();
         shape.destroy();
+    }
+    if (bubbleImage) {
+        bubbleImage.destroy();
     }
 }
 
