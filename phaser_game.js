@@ -34,16 +34,27 @@ var bubble;
 var shape;
 var bubbleImage;
 var dice;
+var diceBubble;
 
-var turns;
-var numTurns = 0;
 
 var titleScreenVisible = true;
 
 // Dice position, settings and frame order
-const diceX = 1400 - 100, diceY = 100;
+const diceX = 1400 - 100;
+const diceY = 100;
+const diceSize = 64;
 var diceRollReady = false;
 const diceMapping = [1,2,4,5,3,0];
+
+// Turns position, and width
+// TODO : Remove magic constants and calculate these dynamically.
+const turnsWidth = 177;
+const turnsHeight = 45;
+const pad = 5;
+const turnsX = diceX - turnsWidth / 2 - pad; 
+const turnsY = diceY - diceSize / 2 - turnsHeight - pad;
+var turns;
+var numTurns = 0;
 
 // Line settings for drawing arrows
 const startingLineWidth = 2;
@@ -94,9 +105,10 @@ function create () {
 
     this.createBubble(droplet.x, droplet.y - 150, 450, 100, 'Click here to roll the dice!');
     
+    diceBubble = drawBubble(turnsX, turnsY, turnsWidth + pad * 2, turnsHeight + diceSize + pad * 2);
     showTurns();
 
-    //this.title = this.add.image(0, 0, 'title').setOrigin(0);
+    this.title = this.add.image(0, 0, 'title').setOrigin(0);
 
     this.input.on('pointerdown', handleclick);
 
@@ -222,7 +234,7 @@ function handleclick(pointer, targets){
     if (titleScreenVisible) {
         titleScreenVisible = false;
         diceRollReady = true;
-        //parent.title.destroy();
+        parent.title.destroy();
     }
     /*
     for (const [key, loc] of Object.entries(locations)) {
@@ -316,6 +328,7 @@ function rollDice() {
     //createBubble(0, 0, 100, 100, "");
 
     dice = parent.add.sprite(diceX, diceY, 'dice').play('diceAnimation');            
+    console.log('Dice ', dice.width, dice.height);
     //  Event handler for when the animation updates on our sprite
     dice.on(Phaser.Animations.Events.ANIMATION_UPDATE, function (anim, frame, sprite, frameKey) {
         dice.angle = dice.angle + 50;
@@ -389,8 +402,8 @@ function destroyDialogs() {
         dice.destroy();
     }
     if (bubble) {
-        content.destroy();
         bubble.destroy();
+        content.destroy();
         shape.destroy();
     }
     if (bubbleImage) {
@@ -405,5 +418,7 @@ function showTurns() {
     }
     var str = 'Turns : ' + numTurns;
     console.log(str);
-    turns = parent.add.text(parent.scale.width - 200, 20, str, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center' });
+    turns = parent.add.text(turnsX + pad, turnsY + pad, str, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center' });
+    var b = turns.getBounds();
+    console.log('Turns ', b.width, b.height);
 }
