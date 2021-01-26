@@ -10,12 +10,12 @@ var config = {
         create: create,
         update: update,
         extend: {
-            createBubble: createBubble,
-            clickedBubble: clickedBubble
+            createInfoBubble: createInfoBubble,
+            createDiceBubble: createDiceBubble,
+            clickedDiceBubble: clickedDiceBubble
         }
     }
 };
-
 
 var game = new Phaser.Game(config);
 
@@ -30,12 +30,11 @@ var droplet;
 var graphics;
 var parent;
 var content;
-var bubble;
+var infoBubble;
 var shape;
 var bubbleImage;
 var dice;
 var diceBubble;
-
 
 var titleScreenVisible = true;
 
@@ -61,8 +60,6 @@ const startingLineWidth = 2;
 const lineWidthIncrement = 2;
 const lineColor = 0x888888;
 
-const fixBubbleWidth = 700;
-const fixBubbleHeight = 200;
 
 function preload () {
     parent = this;
@@ -103,14 +100,11 @@ function create () {
 
     this.anims.create(animConfig);
 
-    this.createBubble(droplet.x, droplet.y - 150, 450, 100, 'Click here to roll the dice!');
+    this.createDiceBubble();
     
-    diceBubble = drawBubble(turnsX, turnsY, turnsWidth + pad * 2, turnsHeight + diceSize + pad * 2);
-    showTurns();
-
     this.title = this.add.image(0, 0, 'title').setOrigin(0);
 
-    this.input.on('pointerdown', handleclick);
+    this.input.on('pointerdown', handleTitleClick);
 
 
     let { width, height } = this.sys.game.canvas;
@@ -229,8 +223,8 @@ function drawArc(next, count) {
 }
 
 
-function handleclick(pointer, targets){
-    console.log("handleclick",pointer);
+function handleTitleClick(pointer, targets){
+    console.log("handleTitleClick",pointer);
     if (titleScreenVisible) {
         titleScreenVisible = false;
         diceRollReady = true;
@@ -274,16 +268,17 @@ function drawBubble(x, y, width, height) {
 }
 
 
-function createBubble (x, y, width, height, quote, image) {
-    const maxWidth = 640, maxHeight = 480;
-    const bubblePadding = 10;
+function createInfoBubble (quote, image) {
+    const maxWidth = 480, maxHeight = 220;
+    const bubblePadding = 5;
     var bubbleWidth = maxWidth + bubblePadding * 2;
-    var bubbleHeight = height;
-    var imageWidth = 0; //bubbleWidth - bubblePadding * 2;
+    var bubbleHeight = maxHeight;
+    var imageWidth = 0;
     var imageHeight = 0;
     var aspectRatio = 1;
 
-    var dummyContent = parent.add.text(0, 0, quote, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center', wordWrap: { width: bubbleWidth - (bubblePadding * 2) } });
+    const textSettings = { fontFamily: 'Arial', fontSize: 30, color: '#000000', align: 'center', wordWrap: { width: bubbleWidth - (bubblePadding * 2) } };
+    var dummyContent = parent.add.text(0, 0, quote, textSettings);
     var dummyBound = dummyContent.getBounds();
     dummyContent.destroy();
     var textHeight = dummyBound.height + bubblePadding;
@@ -294,15 +289,20 @@ function createBubble (x, y, width, height, quote, image) {
         aspectRatio = tex.get(0).height / tex.get(0).width;
         imageWidth = Math.min(maxWidth, tex.get(0).width);
         imageHeight = imageWidth * aspectRatio;
+        if (imageHeight > maxHeight) {
+            imageHeight = maxHeight;
+            imageWidth = imageHeight / aspectRatio;
+        }
+        bubbleWidth = Math.max(imageWidth, dummyBound.width) + bubblePadding * 2;
         bubbleHeight = imageHeight + bubblePadding * 2 + textHeight;
     }
 
-    x = parent.scale.width / 2 - bubbleWidth / 2;
-    y = parent.scale.height / 2 - bubbleHeight / 2;
+    x = parent.scale.width - bubbleWidth - bubblePadding * 2; // parent.scale.width / 2 - bubbleWidth / 2;
+    y = 340; // parent.scale.height / 2 - bubbleHeight / 2;
 
-    bubble = drawBubble(x, y, bubbleWidth, bubbleHeight)
+    infoBubble = drawBubble(x, y, bubbleWidth, bubbleHeight)
 
-    content = parent.add.text(0, 0, quote, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center', wordWrap: { width: bubbleWidth - (bubblePadding * 2) } });
+    content = parent.add.text(0, 0, quote, textSettings);
 
     var b = content.getBounds();
 
@@ -316,16 +316,36 @@ function createBubble (x, y, width, height, quote, image) {
     console.log('Text Bound Height', b.height);
     content.setPosition(x + (bubbleWidth / 2) - (b.width / 2), contentY);
 
+}
+
+
+function createDiceBubble() {
+    diceBubble = drawBubble(turnsX, turnsY, turnsWidth + pad * 2, turnsHeight + diceSize + pad * 2);
+    showTurns();
+
+    dice = parent.add.sprite(diceX, diceY, 'dice');
+    dice.setFrame(diceMapping[0]); // Display 1 on the dice
+
     // Adding a shape to track clicks
-    shape = parent.add.rectangle(x, y, bubbleWidth, bubbleHeight).setOrigin(0,0);
+    shape = parent.add.rectangle(turnsX, turnsY, turnsWidth + pad * 2, turnsHeight + diceSize + pad * 2).setOrigin(0,0);
     shape.setInteractive();
-    shape.on('pointerdown', clickedBubble);
+    shape.on('pointerdown', clickedDiceBubble);
+}
+
+
+function clickedDiceBubble(pointer) {
+    console.log('clickedDiceBubble');
+    if (!diceRollReady) {
+        console.log('Not rolling dice');
+        return;
+    }
+    diceRollReady = false;
+    rollDice();
 }
 
 
 function rollDice() {
     destroyDialogs();
-    //createBubble(0, 0, 100, 100, "");
 
     dice = parent.add.sprite(diceX, diceY, 'dice').play('diceAnimation');            
     console.log('Dice ', dice.width, dice.height);
@@ -334,7 +354,7 @@ function rollDice() {
         dice.angle = dice.angle + 50;
     }, parent);
     dice.on(Phaser.Animations.Events.ANIMATION_COMPLETE, function (anim, frame, sprite, frameKey) {
-        roll = Phaser.Math.Between(1, 6);
+        var roll = Phaser.Math.Between(1, 6);
         //1,2,4,5,3,0;
         dice.setFrame(diceMapping[roll-1]);
         console.log('Roll: ',roll);
@@ -343,17 +363,6 @@ function rollDice() {
 
     numTurns += 1;
     showTurns();
-}
-
-
-function clickedBubble(pointer) {
-    console.log('clicked on bubble!');
-    if (!diceRollReady) {
-        console.log('Not rolling dice');
-        return;
-    }
-    diceRollReady = false;
-    rollDice();
 }
 
 
@@ -368,7 +377,7 @@ function transition(roll) {
             console.log(destination.text);
 
             destroyDialogs();
-            createBubble(0, 0, fixBubbleWidth, fixBubbleHeight, destination.text, destination.image);
+            createInfoBubble(destination.text, destination.image);
             dice = parent.add.sprite(diceX, diceY, 'dice');
             dice.setFrame(diceMapping[roll-1]);
             moveDroplet(next);
@@ -401,10 +410,9 @@ function destroyDialogs() {
     if (dice) {
         dice.destroy();
     }
-    if (bubble) {
-        bubble.destroy();
+    if (infoBubble) {
+        infoBubble.destroy();
         content.destroy();
-        shape.destroy();
     }
     if (bubbleImage) {
         bubbleImage.destroy();
