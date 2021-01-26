@@ -12,7 +12,8 @@ var config = {
         extend: {
             createInfoBubble: createInfoBubble,
             createDiceBubble: createDiceBubble,
-            clickedDiceBubble: clickedDiceBubble
+            clickedDiceBubble: clickedDiceBubble,
+            createTextBubble: createTextBubble
         }
     }
 };
@@ -101,6 +102,8 @@ function create () {
     this.anims.create(animConfig);
 
     this.createDiceBubble();
+
+    this.createTextBubble(770, 70, 420, 70, 'Click on the die to roll!');
     
     this.title = this.add.image(0, 0, 'title').setOrigin(0);
 
@@ -269,7 +272,7 @@ function drawBubble(x, y, width, height) {
 
 
 function createInfoBubble (quote, image) {
-    const maxWidth = 480, maxHeight = 220;
+    const maxWidth = 420, maxHeight = 220;
     const bubblePadding = 5;
     var bubbleWidth = maxWidth + bubblePadding * 2;
     var bubbleHeight = maxHeight;
@@ -298,7 +301,7 @@ function createInfoBubble (quote, image) {
     }
 
     x = parent.scale.width - bubbleWidth - bubblePadding * 2; // parent.scale.width / 2 - bubbleWidth / 2;
-    y = 340; // parent.scale.height / 2 - bubbleHeight / 2;
+    y = 300; // parent.scale.height / 2 - bubbleHeight / 2;
 
     infoBubble = drawBubble(x, y, bubbleWidth, bubbleHeight)
 
@@ -330,6 +333,12 @@ function createDiceBubble() {
     shape = parent.add.rectangle(turnsX, turnsY, turnsWidth + pad * 2, turnsHeight + diceSize + pad * 2).setOrigin(0,0);
     shape.setInteractive();
     shape.on('pointerdown', clickedDiceBubble);
+}
+
+
+function createTextBubble(x, y, width, height, text) {
+    infoBubble = drawBubble(x, y, width, height);
+    content = parent.add.text(x + 15, y + 15, text, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center' });
 }
 
 
