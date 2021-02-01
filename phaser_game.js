@@ -280,7 +280,7 @@ function createInfoBubble (quote, image) {
     var imageHeight = 0;
     var aspectRatio = 1;
 
-    const textSettings = { fontFamily: 'Arial', fontSize: 30, color: '#000000', align: 'center', wordWrap: { width: bubbleWidth - (bubblePadding * 2) } };
+    const textSettings = { fontFamily: 'Helvetica Neue', fontSize: 30, color: '#000000', align: 'center', wordWrap: { width: bubbleWidth - (bubblePadding * 2) } };
     var dummyContent = parent.add.text(0, 0, quote, textSettings);
     var dummyBound = dummyContent.getBounds();
     dummyContent.destroy();
@@ -338,7 +338,7 @@ function createDiceBubble() {
 
 function createTextBubble(x, y, width, height, text) {
     infoBubble = drawBubble(x, y, width, height);
-    content = parent.add.text(x + 15, y + 15, text, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center' });
+    content = parent.add.text(x + 15, y + 15, text, { fontFamily: 'Helvetica Neue', fontSize: 40, color: '#000000', align: 'center' });
 }
 
 
@@ -435,7 +435,7 @@ function showTurns() {
     }
     var str = 'Turns : ' + numTurns;
     console.log(str);
-    turns = parent.add.text(turnsX + pad, turnsY + pad, str, { fontFamily: 'Arial', fontSize: 40, color: '#000000', align: 'center' });
+    turns = parent.add.text(turnsX + pad, turnsY + pad, str, { fontFamily: 'Helvetica Neue', fontSize: 40, color: '#000000', align: 'center' });
     var b = turns.getBounds();
     console.log('Turns ', b.width, b.height);
 }
