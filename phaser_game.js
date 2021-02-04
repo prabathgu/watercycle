@@ -71,9 +71,7 @@ function preload () {
     this.load.image('droplet', 'droplet.png');
     this.load.spritesheet('dice', 'dice.png', { frameWidth: 64, frameHeight: 64 });
     for (const location in locations) {
-        console.log(location);
         locations[location].goto.forEach(function(destination) {
-            console.log(destination);
             if (destination.image) {
                 parent.load.image(destination.image, destination.image);
             };
@@ -111,10 +109,6 @@ function create () {
 
 
     let { width, height } = this.sys.game.canvas;
-    console.log(width, height);
-    console.log(window.devicePixelRatio);
-    console.log(window);
-    console.log(window.innerWidth, window.innerHeight);
 }
 
 
@@ -125,7 +119,6 @@ function update() {
         travelSteps -= 1;
 
         if (travelSteps <= 0) {
-            console.log('stop droplet');
             travelSteps = 0;
             travelling = false;
             diceRollReady = true;
@@ -135,9 +128,6 @@ function update() {
 
 
 function moveDroplet(next) {
-
-    console.log('Move droplet ', next);
-
     travelling = true;
 
     var toX = locations[next].endX + offsetX;
@@ -185,10 +175,8 @@ function drawArrow(next, count) {
 
     var line = new Phaser.Geom.Line(fromX, fromY, toX, toY);
     var angle = Phaser.Math.RadToDeg(Math.abs(Phaser.Geom.Line.Angle(line)));
-    console.log(angle);
     // Special case, if the line is steep, always draw from the center x
     if (angle > 80 && angle < 100) {
-        console.log('Almost vertical line!');
         fromX = (locations[current].startX + locations[current].endX)/2;
         toX = (locations[next].startX + locations[next].endX)/2;
         line = new Phaser.Geom.Line(fromX, fromY, toX, toY);
@@ -227,26 +215,11 @@ function drawArc(next, count) {
 
 
 function handleTitleClick(pointer, targets){
-    console.log("handleTitleClick",pointer);
     if (titleScreenVisible) {
         titleScreenVisible = false;
         diceRollReady = true;
         parent.title.destroy();
     }
-    /*
-    for (const [key, loc] of Object.entries(locations)) {
-        if (loc.startX < pointer.downX && loc.endX > pointer.downX
-            && loc.startY < pointer.downY && loc.endY > pointer.downY) {
-            console.log('Hit');
-            console.log(key);
-            if (!travelling && key != current) {
-                drawArrow(key);
-                moveDroplet(key);
-                current = next;
-            }
-        }
-    }
-    */
 }
 
 
@@ -288,7 +261,6 @@ function createInfoBubble (quote, image) {
 
     if (image) {
         var tex = parent.textures.get(image);
-        console.log(tex.get(0).width, tex.get(0).height);
         aspectRatio = tex.get(0).height / tex.get(0).width;
         imageWidth = Math.min(maxWidth, tex.get(0).width);
         imageHeight = imageWidth * aspectRatio;
@@ -313,10 +285,8 @@ function createInfoBubble (quote, image) {
     if (image) {
         contentY = y + bubbleHeight - textHeight;
         bubbleImage = parent.add.image(x + bubbleWidth / 2 - imageWidth / 2, y + bubblePadding, image).setOrigin(0, 0);
-        console.log(bubbleImage.width, bubbleImage.height);
         bubbleImage.setDisplaySize(imageWidth, imageHeight);
     }
-    console.log('Text Bound Height', b.height);
     content.setPosition(x + (bubbleWidth / 2) - (b.width / 2), contentY);
 
 }
@@ -343,9 +313,7 @@ function createTextBubble(x, y, width, height, text) {
 
 
 function clickedDiceBubble(pointer) {
-    console.log('clickedDiceBubble');
     if (!diceRollReady) {
-        console.log('Not rolling dice');
         return;
     }
     diceRollReady = false;
@@ -357,7 +325,6 @@ function rollDice() {
     destroyDialogs();
 
     dice = parent.add.sprite(diceX, diceY, 'dice').play('diceAnimation');            
-    console.log('Dice ', dice.width, dice.height);
     //  Event handler for when the animation updates on our sprite
     dice.on(Phaser.Animations.Events.ANIMATION_UPDATE, function (anim, frame, sprite, frameKey) {
         dice.angle = dice.angle + 50;
@@ -366,7 +333,6 @@ function rollDice() {
         var roll = Phaser.Math.Between(1, 6);
         //1,2,4,5,3,0;
         dice.setFrame(diceMapping[roll-1]);
-        console.log('Roll: ',roll);
         transition(roll);
     }, parent);
 
@@ -382,8 +348,6 @@ function transition(roll) {
     locations[current].goto.forEach(function(destination) {
         if (destination.rolls.includes(roll)) {
             var next = destination.location;
-            console.log('You go from ', current,' to ',next);
-            console.log(destination.text);
 
             destroyDialogs();
             createInfoBubble(destination.text, destination.image);
@@ -399,7 +363,6 @@ function transition(roll) {
                 locations[current].visits[next] = 0;
             }
             locations[current].visits[next] += 1;
-            console.log('Visit count: ', locations[current].visits[next]);
 
             // Draw an arc if it's a self visit, an arrow otherwise
             if (current == next) {
@@ -415,7 +378,6 @@ function transition(roll) {
 
 
 function destroyDialogs() {
-    console.log('Cleanup')
     if (dice) {
         dice.destroy();
     }
@@ -434,8 +396,6 @@ function showTurns() {
         turns.destroy();
     }
     var str = 'Turns : ' + numTurns;
-    console.log(str);
     turns = parent.add.text(turnsX + pad, turnsY + pad, str, { fontFamily: 'Helvetica Neue', fontSize: 40, color: '#000000', align: 'center' });
     var b = turns.getBounds();
-    console.log('Turns ', b.width, b.height);
 }
