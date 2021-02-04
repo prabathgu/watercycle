@@ -227,8 +227,8 @@ function drawBubble(x, y, width, height) {
     var bubble = parent.add.graphics({ x: x, y: y });
 
     //  Bubble shadow
-    bubble.fillStyle(0x222222, 0.5);
-    bubble.fillRoundedRect(6, 6, width, height, 16);
+    //bubble.fillStyle(0x222222, 0.5);
+    //bubble.fillRoundedRect(6, 6, width, height, 16);
 
     //  Bubble color
     bubble.fillStyle(0xffffff, 1);
