@@ -237,7 +237,7 @@ function drawBubble(x, y, width, height) {
     bubble.lineStyle(4, 0x565656, 1);
 
     //  Bubble shape and outline
-    bubble.strokeRoundedRect(0, 0, width, height, 16);
+    // bubble.strokeRoundedRect(0, 0, width, height, 16);
     bubble.fillRoundedRect(0, 0, width, height, 16);
 
     return bubble;
