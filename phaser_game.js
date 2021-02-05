@@ -232,13 +232,13 @@ function drawBubble(x, y, width, height) {
 
     //  Bubble color
     bubble.fillStyle(0xffffff, 1);
+
+    //  Bubble outline line style
     bubble.lineStyle(4, 0x565656, 1);
 
     //  Bubble shape and outline
-    bubble.fillRoundedRect(0, 0, width, height, 16);
-
-    //  Bubble outline line style
     bubble.strokeRoundedRect(0, 0, width, height, 16);
+    bubble.fillRoundedRect(0, 0, width, height, 16);
 
     return bubble;
 }
